@@ -9,10 +9,7 @@ import Foundation
 
 
 open class HttpRouter {
-    
-    public init() {
-    }
-    
+	
     private class Node {
         var nodes = [String: Node]()
         var handler: ((HttpRequest) -> HttpResponse)? = nil
