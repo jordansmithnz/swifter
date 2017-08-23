@@ -6,6 +6,21 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		17FE07871F4E45C2004C3A86 /* SwifteriOSUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 17FE07881F4E45C2004C3A86 /* Build configuration list for PBXAggregateTarget "SwifteriOSUniversal" */;
+			buildPhases = (
+				17FE078B1F4E45CB004C3A86 /* ShellScript */,
+			);
+			dependencies = (
+				17FE078D1F4E4778004C3A86 /* PBXTargetDependency */,
+			);
+			name = SwifteriOSUniversal;
+			productName = Swifter;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		0858E7F41D68BB2600491CD1 /* IOSafetyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0858E7F31D68BB2600491CD1 /* IOSafetyTests.swift */; };
 		0858E7F51D68BB2600491CD1 /* IOSafetyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0858E7F31D68BB2600491CD1 /* IOSafetyTests.swift */; };
@@ -94,6 +109,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7AE893FA1C0512C400A29F63;
 			remoteInfo = SwifterMac;
+		};
+		17FE078C1F4E4778004C3A86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C839B6619422CFF003A6950 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7AE893E61C05127900A29F63;
+			remoteInfo = SwifteriOS;
 		};
 		7AE8940E1C0515A200A29F63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -552,6 +574,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Damian Kołakowski";
 				TargetAttributes = {
+					17FE07871F4E45C2004C3A86 = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
 					7AE893E61C05127900A29F63 = {
 						CreatedOnToolsVersion = 7.1;
 						LastSwiftMigration = 0800;
@@ -593,6 +619,7 @@
 				269B47861D3AAAE20042D137 /* SwiftertvOS */,
 				7CCD875B1C66099B0068099B /* SwifteriOSTests */,
 				7CCD87781C660EA30068099B /* SwifterOSXTests */,
+				17FE07871F4E45C2004C3A86 /* SwifteriOSUniversal */,
 			);
 		};
 /* End PBXProject section */
@@ -645,6 +672,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		17FE078B1F4E45CB004C3A86 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set bash script to exit immediately if any commands fail.\nset -e\n\n# 2\n# Setup some constants for use later on.\nINTERNAL_FRAMEWORK_NAME=\"SwifteriOS\"\nFRAMEWORK_NAME=\"Swifter\"\n\n# 3\n# If remnants from a previous build exist, delete them.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi\n\n# 4\n# Build the framework for device and for simulator (using\n# all needed architectures).\nxcodebuild -target \"${INTERNAL_FRAMEWORK_NAME}\" -configuration Release -arch arm64 -arch armv7 -arch armv7s only_active_arch=no defines_module=yes -sdk \"iphoneos\"\nxcodebuild -target \"${INTERNAL_FRAMEWORK_NAME}\" -configuration Release -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\"\n\n# 5\n# Remove .framework file if exists on Desktop from previous run.\nif [ -d \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\" ]; then\nrm -rf \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\"\nfi\n\n# 6\n# Copy the device version of framework to Desktop.\ncp -r \"${SRCROOT}/build/Release-iphoneos/${FRAMEWORK_NAME}.framework\" \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework\"\n\n# 7\n# Replace the framework executable within the framework with\n# a new version created by merging the device and simulator\n# frameworks' executables with lipo.\nlipo -create -output \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${SRCROOT}/build/Release-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${SRCROOT}/build/Release-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# 8\n# Copy the Swift module mappings for the simulator into the\n# framework.  The device mappings already exist from step 6.\ncp -r \"${SRCROOT}/build/Release-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${HOME}/Desktop/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# 9\n# Delete the most recent build.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		269B47871D3AAAE20042D137 /* Sources */ = {
@@ -774,6 +818,11 @@
 			target = 7AE893FA1C0512C400A29F63 /* SwifterMac */;
 			targetProxy = 17CB29D21F4B84F6000E2344 /* PBXContainerItemProxy */;
 		};
+		17FE078D1F4E4778004C3A86 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7AE893E61C05127900A29F63 /* SwifteriOS */;
+			targetProxy = 17FE078C1F4E4778004C3A86 /* PBXContainerItemProxy */;
+		};
 		7AE8940F1C0515A200A29F63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7AE893FA1C0512C400A29F63 /* SwifterMac */;
@@ -804,6 +853,22 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		17FE07891F4E45C2004C3A86 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		17FE078A1F4E45C2004C3A86 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		269B479F1D3AAAE20042D137 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1222,6 +1287,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		17FE07881F4E45C2004C3A86 /* Build configuration list for PBXAggregateTarget "SwifteriOSUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17FE07891F4E45C2004C3A86 /* Debug */,
+				17FE078A1F4E45C2004C3A86 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		269B479E1D3AAAE20042D137 /* Build configuration list for PBXNativeTarget "SwiftertvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
